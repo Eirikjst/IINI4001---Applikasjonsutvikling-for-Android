@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Exercise4</string>
+    <string-array name="description">
+        <item>The superior mobile OS</item>
+        <item>A cute penguin</item>
+        <item>The not so superior mobile OS</item>
+        <item>Most common OS on desktop/laptops??</item>
+    </string-array>
+</resources>
