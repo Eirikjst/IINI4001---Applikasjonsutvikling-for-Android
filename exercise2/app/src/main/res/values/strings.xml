@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">exercise2</string>
+    <string name="task_1">Task 1</string>
+    <string name="random_number">Random number</string>
+    <string name="random_int">random int</string>
+    <string name="exercise1_task_a">Exercise1_task_a</string>
+    <string name="set_random">set_random</string>
+    <string name="Addition">Addition</string>
+    <string name="Multiplication">Multiplication</string>
+    <string name='Answer'>Answer</string>
+    <string name='Upper_bound'>Upper bound:</string>
+    <string name="Correct">Correct!</string>
+    <string name="Wrong_Correct_answer_is">Wrong. Correct answer is</string>
+    <string name="_1_number">First number: 3</string>
+    <string name="_2_number">First number: 5</string>
+</resources>
