@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Exercise5_v2</string>
+    <string name="hello">Guessing game</string>
+</resources>
