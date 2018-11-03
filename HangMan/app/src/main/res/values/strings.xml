@@ -1,0 +1,80 @@
+<resources>
+    <string name="app_name">Hangman</string>
+    <string name="Home_text">Welcome to Hangman, click flag to start</string>
+    <string name="title_activity_game_screen">GameScreen</string>
+
+    <!--
+
+    Each entry in arrays below having matching index based on language selection
+
+    0 - English
+    1 - Norwegian
+
+    -->
+
+    <string-array name="alphabet">
+        <item>ABCDEFGHIJKLMNOPQRSTUVWXYZ</item>
+        <item>ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ</item>
+    </string-array>
+
+    <string-array name="exitActionBar">
+        <item>Exit</item>
+        <item>Avslutt</item>
+    </string-array>
+
+    <string-array name="gamesLost">
+        <item>Games lost: </item>
+        <item>Spill tapt: </item>
+    </string-array>
+
+    <string-array name="gamesWon">
+        <item>Games won: </item>
+        <item>Spill vunnet: </item>
+    </string-array>
+
+    <string-array name="hangmanWords_english">
+        <item>Sun</item>
+        <item>Complex</item>
+        <item>User test</item>
+        <item>Computer</item>
+        <item>Engineering</item>
+        <item>Meme</item>
+        <item>Follower</item>
+        <item>Github</item>
+        <item>Bob Ross</item>
+        <item>Image</item>
+    </string-array>
+
+    <string-array name="hangmanWords_norwegian">
+        <item>Sol</item>
+        <item>Gutt</item>
+        <item>Kake</item>
+        <item>Kilder</item>
+        <item>Emulator</item>
+        <item>Android</item>
+        <item>Hangman</item>
+        <item>Tilgjengelighet</item>
+        <item>Prosjekt-øving</item>
+        <item>Coka-Cola</item>
+    </string-array>
+
+    <string-array name="helpActionBar">
+        <item>Help</item>
+        <item>Hjelp</item>
+    </string-array>
+
+    <string-array name="nextWord">
+        <item>Next word</item>
+        <item>Neste ord</item>
+    </string-array>
+
+    <string-array name="wordsPlayed">
+        <item>Words played: </item>
+        <item>Ord spilt: </item>
+    </string-array>
+
+    <string-array name="wordsTotal">
+        <item>Words total: </item>
+        <item>Ord totalt: </item>
+    </string-array>
+</resources>
