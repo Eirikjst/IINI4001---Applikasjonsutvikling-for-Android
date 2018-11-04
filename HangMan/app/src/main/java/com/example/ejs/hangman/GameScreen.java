@@ -4,10 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -22,6 +27,8 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
 
     private Button btnNextWord;
 
+    private HangmanImages hangmanImages;
+
     private int gamesLostCount = 0;
     private int gamesWonCount = 0;
     private int languageSelected;
@@ -30,8 +37,12 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
 
     private List<Integer> letters_guessed = new ArrayList<>();
 
+    private PopupWindow popupWindow;
+
     private String alphabetString;
+    private String congratulations;
     private String exitText;
+    private String gameFinished;
     private String gamesLost;
     private String gamesWon;
     private String helpText;
@@ -42,7 +53,7 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
     private String[] words_to_guess;
 
     private TableLayout tableLayout;
-    private TextView gamesWonTextView, gamesLostTextView, totalWordsTextView, wordsPlayedTextView;
+    private TextView gamesWonTextView, gamesLostTextView, popupText ,totalWordsTextView, wordsPlayedTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +94,16 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         return super.onOptionsItemSelected(menuItem);
     }
 
+    public void onDestroy(){
+        super.onDestroy();
+        if (popupWindow.isShowing()) popupWindow.dismiss();
+    }
+
+    /*
+
+    Fill tablelayout with characters, and adds click listener to each character
+
+     */
     @SuppressLint("ResourceType")
     private void initializeAlphabetTable() {
 
@@ -152,8 +173,12 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
     }
 
     private void setVariables(){
+        hangmanImages = (HangmanImages) getSupportFragmentManager().findFragmentById(R.id.fragment1);
+
         alphabetString = getResources().getStringArray(R.array.alphabet)[languageSelected];
+        congratulations = getResources().getStringArray(R.array.congratulations)[languageSelected];
         exitText = getResources().getStringArray(R.array.exitActionBar)[languageSelected];
+        gameFinished = getResources().getStringArray(R.array.gameFinished)[languageSelected];
         gamesLost = getResources().getStringArray(R.array.gamesLost)[languageSelected];
         gamesWon = getResources().getStringArray(R.array.gamesWon)[languageSelected];
         helpText = getResources().getStringArray(R.array.helpActionBar)[languageSelected];
@@ -182,39 +207,91 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         totalWordsTextView = findViewById(R.id.totalWords);
         wordsPlayedTextView = findViewById(R.id.wordsPlayed);
 
+        /*
+        Initialize popupwindow layout
+         */
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_layout, null);
+        popupText = popupView.findViewById(R.id.popupText);
+        popupWindow = new PopupWindow(
+                popupView,
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+        );
+
         btnNextWord.setText(nextWord);
         gamesLostTextView.setText(gamesLost+gamesLostCount);
         gamesWonTextView.setText(gamesWon+gamesWonCount);
         totalWordsTextView.setText(totalWords+ wordsTotalCount);
         wordsPlayedTextView.setText(wordsPlayed+wordsPlayedCount);
+
+        hangmanImages.setWords(languageSelected);
     }
 
+    /*
+    Listener for characters in tablelayout
+     */
     @Override
     public void onClick(View v) {
         if (ACTIVE_GAME) {
             v.setVisibility(View.INVISIBLE);
             TextView temp = tableLayout.findViewById(v.getId());
             letters_guessed.add(v.getId());
-            HangmanImages hangmanImages = (HangmanImages) getSupportFragmentManager().findFragmentById(R.id.fragment1);
             hangmanImages.nextImage(temp.getText().toString());
         }
     }
 
+    /*
+    * Listener for "next word" button, resets tablelayout
+    * and set all characters to visible
+    *
+    */
     public void onClickButton(View v) {
-        HangmanImages hangmanImages = (HangmanImages) getSupportFragmentManager().findFragmentById(R.id.fragment1);
+        if (popupWindow.isShowing()) popupWindow.dismiss();
         hangmanImages.newWord();
         for (int i = 0; i < letters_guessed.size(); i++){
             tableLayout.findViewById(letters_guessed.get(i)).setVisibility(View.VISIBLE);
         }
         btnNextWord.setVisibility(View.INVISIBLE);
-        ACTIVE_GAME = true;
+        if (wordsTotalCount != wordsPlayedCount){
+            ACTIVE_GAME = true;
+        }
     }
 
     @Override
-    public void updateVarsAfterGame() {
+    public void wordGuessedLost() {
         ACTIVE_GAME = false;
+        gamesLostCount = gamesLostCount + 1;
+        gamesLostTextView.setText(gamesLost+gamesLostCount);
         wordsPlayedCount++;
         wordsPlayedTextView.setText(wordsPlayed+wordsPlayedCount);
-        btnNextWord.setVisibility(View.VISIBLE);
+        if (wordsPlayedCount == wordsTotalCount) {
+            gameFinished();
+        } else {
+            btnNextWord.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void wordGuessedWon(){
+        ACTIVE_GAME = false;
+        gamesWonCount = gamesWonCount + 1;
+        gamesWonTextView.setText(gamesWon+gamesWonCount);
+        wordsPlayedCount++;
+        wordsPlayedTextView.setText(wordsPlayed+wordsPlayedCount);
+        if (wordsPlayedCount == wordsTotalCount) {
+            gameFinished();
+        } else {
+            popupText.setText(congratulations);
+            popupWindow.showAtLocation(findViewById(R.id.rl), Gravity.CENTER,0,0);
+            btnNextWord.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void gameFinished(){
+        ACTIVE_GAME = false;
+        btnNextWord.setVisibility(View.INVISIBLE);
+        popupText.setText(gameFinished);
+        popupWindow.showAtLocation(findViewById(R.id.rl), Gravity.CENTER,0,0);
     }
 }

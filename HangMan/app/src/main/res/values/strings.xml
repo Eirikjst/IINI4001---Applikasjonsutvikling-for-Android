@@ -17,9 +17,19 @@
         <item>ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ</item>
     </string-array>
 
+    <string-array name="congratulations">
+        <item>Congratulations</item>
+        <item>Gratulerer</item>
+    </string-array>
+
     <string-array name="exitActionBar">
         <item>Exit</item>
         <item>Avslutt</item>
+    </string-array>
+
+    <string-array name="gameFinished">
+        <item>Game finished, click exit to start new game</item>
+        <item>Spillet er ferdig, klikk avslutt for å starte nytt spill</item>
     </string-array>
 
     <string-array name="gamesLost">

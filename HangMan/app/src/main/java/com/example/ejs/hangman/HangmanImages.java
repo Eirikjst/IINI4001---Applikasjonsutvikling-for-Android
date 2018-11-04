@@ -15,15 +15,29 @@ import android.widget.ViewFlipper;
 
 import org.w3c.dom.Text;
 
-public class HangmanImages extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    private ViewFlipper viewFlipper;
-    private TextView letters_guessed;
+public class HangmanImages extends Fragment {
 
     HangmanImagesListener activityCommander;
 
+    private List<String> wordsList = new ArrayList<>();
+
+    private String currentWord;
+
+    private String[] words;
+
+    private ViewFlipper viewFlipper;
+
+    private TextView letters_guessed;
+    private TextView word_to_guess;
+
     public interface HangmanImagesListener{
-        public void updateVarsAfterGame();
+        void wordGuessedLost();
+        void wordGuessedWon();
+        void gameFinished();
     }
 
     @Override
@@ -40,28 +54,86 @@ public class HangmanImages extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hangman_images, container, false);
+
         viewFlipper = view.getRootView().findViewById(R.id.hangmanViewFlipper);
+
         letters_guessed = view.getRootView().findViewById(R.id.letters_guessed);
+        word_to_guess = view.getRootView().findViewById(R.id.word_to_guess);
         return view;
     }
 
     public void nextImage(String letter){
-        viewFlipper.showNext();
-        if (viewFlipper.getDisplayedChild() == 10) {
-            String temp = letters_guessed.getText().toString();
-            letters_guessed.setText(temp+" "+letter);
-            activityCommander.updateVarsAfterGame();
-        } else {
-            String temp = letters_guessed.getText().toString();
-            if (temp == ""){
-                letters_guessed.setText(letter);
-            }
-            letters_guessed.setText(temp+" "+letter);
+        String temp = letters_guessed.getText().toString();
+        if (temp == ""){
+            letters_guessed.setText(letter);
         }
+        letters_guessed.setText(temp+" "+letter);
+        checkForCharacterInWord(letter);
     }
 
     public void newWord() {
-        letters_guessed.setText("");
-        viewFlipper.showNext();
+        if (!wordsList.isEmpty()) {
+            viewFlipper.setDisplayedChild(0);
+            Random rand = new Random();
+            int random = rand.nextInt(wordsList.size());
+            setUnderscores(wordsList.get(random));
+            System.out.println(currentWord);
+            letters_guessed.setText("");
+            wordsList.remove(random);
+        }
+    }
+
+    public void setWords(int language){
+        if (language == 0) words = getResources().getStringArray(R.array.hangmanWords_english);
+        if (language == 1) words = getResources().getStringArray(R.array.hangmanWords_norwegian);
+
+        for (int i = 0; i < words.length; i++){
+            wordsList.add(words[i]);
+        }
+        Random rand = new Random();
+        int random = rand.nextInt(words.length);
+        setUnderscores(words[random]);
+        wordsList.remove(random);
+    }
+
+    private void setUnderscores(String randomWord) {
+        String underscores = "";
+        currentWord = "";
+        for (int i = 0; i < randomWord.length(); i++){
+            if (randomWord.substring(i, i+1).equals("-")){
+                underscores += "- ";
+                currentWord += String.valueOf(randomWord.charAt(i))+" ";
+            } else if (randomWord.substring(i, i+1).equals(" ")) {
+                underscores += "  ";
+                currentWord += String.valueOf(randomWord.charAt(i))+" ";
+            } else {
+                underscores += "_ ";
+                currentWord += String.valueOf(randomWord.charAt(i))+" ";
+            }
+        }
+        word_to_guess.setText(underscores);
+    }
+
+    private void checkForCharacterInWord(String letter) {
+        String temp = word_to_guess.getText().toString();
+        System.out.println("Current word: "+currentWord);
+        for (int i = 0; i < currentWord.length(); i++) {
+            if (currentWord.substring(i, i + 1).equalsIgnoreCase(letter)) {
+                char[] temp2 = temp.toCharArray();
+                temp2[i] = letter.charAt(0);
+                temp = String.valueOf(temp2);
+            }
+        }
+        if (temp.equals(word_to_guess.getText().toString())) {
+            viewFlipper.showNext();
+            if (viewFlipper.getDisplayedChild() == 10) {
+                String temp3 = letters_guessed.getText().toString();
+                //letters_guessed.setText(temp3+" "+letter);
+                activityCommander.wordGuessedLost();
+            }
+        } else {
+            word_to_guess.setText(temp);
+            if (word_to_guess.getText().toString().equalsIgnoreCase(currentWord)) activityCommander.wordGuessedWon();
+        }
     }
 }

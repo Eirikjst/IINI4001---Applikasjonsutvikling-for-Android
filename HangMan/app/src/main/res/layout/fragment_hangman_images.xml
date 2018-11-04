@@ -108,11 +108,12 @@
                    />
            </ViewFlipper>
            <TextView
+               android:background="#000000"
                android:id="@+id/word_to_guess"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:gravity="center"
-               android:text="_ _ _ _"
+               android:textColor="#ffffff"
                android:textSize="20dp"
                />
        </LinearLayout>
