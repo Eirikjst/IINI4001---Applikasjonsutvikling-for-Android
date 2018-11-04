@@ -10,6 +10,10 @@
     0 - English
     1 - Norwegian
 
+    The only unique arrays are the word arrays, to make it easier to access.
+    To implement a new language, add new entries in the arrays based on the same structure as described above.
+    GameScreen.setVariables() has to be changed to support this, check comments in code
+
     -->
 
     <string-array name="alphabet">
@@ -25,6 +29,21 @@
     <string-array name="exitActionBar">
         <item>Exit</item>
         <item>Avslutt</item>
+    </string-array>
+
+    <string-array name="gameDescription">
+        <item>
+            The goal of Hangman is to guess the word your out of attempts.
+            The word is represented by underscores in the display,
+            and for each correct guess the corresponding underscore will be replaced by the correct character.
+            If you manage to guess all the correct characters before the man is hanged, you win.
+        </item>
+        <item>
+            Målet med Hangman er å gjette seg fram til et gitt ord før du går tom for forsøk.
+            Ordet er representert med streker i appen,
+            og for hver bokstav som gjettes, hvis det inneholdes i ordet, erstattet streken(e) i korrekt posisjon.
+            Hvis du klarer å gjette hele ordet før mannen blir hengt, vinner du.
+        </item>
     </string-array>
 
     <string-array name="gameFinished">

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,13 +128,31 @@ public class HangmanImages extends Fragment {
         if (temp.equals(word_to_guess.getText().toString())) {
             viewFlipper.showNext();
             if (viewFlipper.getDisplayedChild() == 10) {
-                String temp3 = letters_guessed.getText().toString();
-                //letters_guessed.setText(temp3+" "+letter);
+                //String temp3 = letters_guessed.getText().toString();
+                fillInMissingCharacters();
                 activityCommander.wordGuessedLost();
             }
         } else {
             word_to_guess.setText(temp);
             if (word_to_guess.getText().toString().equalsIgnoreCase(currentWord)) activityCommander.wordGuessedWon();
         }
+    }
+
+    /*
+    Fills in missing characters if players loses
+
+    source: https://stackoverflow.com/questions/6094315/single-textview-with-multiple-colored-text
+     */
+    private void fillInMissingCharacters(){
+        String temp = word_to_guess.getText().toString();
+        String finalWord = "";
+        for (int i = 0; i < currentWord.length(); i++) {
+            if (temp.substring(i, i+1).equalsIgnoreCase(String.valueOf(currentWord.charAt(i)))) {
+                finalWord += "<font color=#ffffff>"+String.valueOf(temp.charAt(i))+"</font>";
+            } else {
+                finalWord += "<font color=#808080>"+String.valueOf(currentWord.charAt(i))+"</font>";
+            }
+        }
+        word_to_guess.setText(Html.fromHtml(finalWord));
     }
 }

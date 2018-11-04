@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,6 +29,8 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
 
     private HangmanImages hangmanImages;
 
+    private ImageButton imageButton;
+
     private int gamesLostCount = 0;
     private int gamesWonCount = 0;
     private int languageSelected;
@@ -42,6 +44,7 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
     private String alphabetString;
     private String congratulations;
     private String exitText;
+    private String gameDescription;
     private String gameFinished;
     private String gamesLost;
     private String gamesWon;
@@ -88,8 +91,9 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         //if else structure instead of case because vars is not final
         if (temp == exitText) {
             finish();
-        } else if (temp == "") {
-            System.out.println("test");
+        } else if (temp == helpText) {
+            popupText.setText(gameDescription);
+            popupWindow.showAtLocation(findViewById(R.id.rl), Gravity.CENTER,0,0);
         }
         return super.onOptionsItemSelected(menuItem);
     }
@@ -101,7 +105,7 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
 
     /*
 
-    Fill tablelayout with characters, and adds click listener to each character
+    Fills tablelayout with characters, and adds click listener to each character
 
      */
     @SuppressLint("ResourceType")
@@ -178,6 +182,7 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         alphabetString = getResources().getStringArray(R.array.alphabet)[languageSelected];
         congratulations = getResources().getStringArray(R.array.congratulations)[languageSelected];
         exitText = getResources().getStringArray(R.array.exitActionBar)[languageSelected];
+        gameDescription = getResources().getStringArray(R.array.gameDescription)[languageSelected];
         gameFinished = getResources().getStringArray(R.array.gameFinished)[languageSelected];
         gamesLost = getResources().getStringArray(R.array.gamesLost)[languageSelected];
         gamesWon = getResources().getStringArray(R.array.gamesWon)[languageSelected];
@@ -190,6 +195,12 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         Get words for hangman depending on language selected
         0 - English
         1 - Norwegian
+
+        Structure:
+
+        if (lang == 0) words_to_guess = hangmanWords_lang
+        else if (lang == 1 ) words_to_guess = hangmanWords_lang
+        else if ...
 
         */
         if (languageSelected == 0) {
@@ -212,6 +223,13 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
          */
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_layout, null);
+        imageButton = popupView.findViewById(R.id.popup_close);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
         popupText = popupView.findViewById(R.id.popupText);
         popupWindow = new PopupWindow(
                 popupView,
@@ -258,6 +276,11 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    /*
+    Called when the user fails to guess the word.
+
+    Updates game variables
+     */
     @Override
     public void wordGuessedLost() {
         ACTIVE_GAME = false;
@@ -272,6 +295,11 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    /*
+    Called when the user guesses the word.
+
+    Updates game variables
+     */
     public void wordGuessedWon(){
         ACTIVE_GAME = false;
         gamesWonCount = gamesWonCount + 1;
@@ -287,6 +315,9 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    /*
+    Called when all words have been in play, disables ui interaction except actionbar
+     */
     @Override
     public void gameFinished(){
         ACTIVE_GAME = false;
