@@ -1,8 +1,6 @@
 package com.example.ejs.hangman;
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +74,6 @@ public class HangmanImages extends Fragment {
             Random rand = new Random();
             int random = rand.nextInt(wordsList.size());
             setUnderscores(wordsList.get(random));
-            System.out.println(currentWord);
             letters_guessed.setText("");
             wordsList.remove(random);
         }
@@ -117,7 +112,6 @@ public class HangmanImages extends Fragment {
 
     private void checkForCharacterInWord(String letter) {
         String temp = word_to_guess.getText().toString();
-        System.out.println("Current word: "+currentWord);
         for (int i = 0; i < currentWord.length(); i++) {
             if (currentWord.substring(i, i + 1).equalsIgnoreCase(letter)) {
                 char[] temp2 = temp.toCharArray();
@@ -128,7 +122,6 @@ public class HangmanImages extends Fragment {
         if (temp.equals(word_to_guess.getText().toString())) {
             viewFlipper.showNext();
             if (viewFlipper.getDisplayedChild() == 10) {
-                //String temp3 = letters_guessed.getText().toString();
                 fillInMissingCharacters();
                 activityCommander.wordGuessedLost();
             }
@@ -148,9 +141,11 @@ public class HangmanImages extends Fragment {
         String finalWord = "";
         for (int i = 0; i < currentWord.length(); i++) {
             if (temp.substring(i, i+1).equalsIgnoreCase(String.valueOf(currentWord.charAt(i)))) {
-                finalWord += "<font color=#ffffff>"+String.valueOf(temp.charAt(i))+"</font>";
+                finalWord += "<font color=#ffffff>"+String.valueOf(temp.charAt(i)).toUpperCase()+"</font>";
+            } else if (temp.substring(i, i+1).equals(" ")){
+                finalWord += " ";
             } else {
-                finalWord += "<font color=#808080>"+String.valueOf(currentWord.charAt(i))+"</font>";
+                finalWord += "<font color=#808080>"+String.valueOf(currentWord.charAt(i)).toUpperCase()+"</font>";
             }
         }
         word_to_guess.setText(Html.fromHtml(finalWord));
