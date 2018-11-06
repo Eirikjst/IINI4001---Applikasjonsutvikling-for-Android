@@ -50,6 +50,7 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
     private String gamesWon;
     private String helpText;
     private String nextWord;
+    private String returnText;
     private String totalWords;
     private String wordsPlayed;
 
@@ -78,10 +79,12 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuItem menuItem = menu.add(0,0,0, exitText);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItem menuItem = menu.add(0,0,0, returnText);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         menuItem=menu.add(0,1,0,helpText);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menuItem=menu.add(0, 2, 0, exitText);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         return true;
     }
 
@@ -89,11 +92,15 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         String temp = menuItem.getTitle().toString();
 
         //if else structure instead of case because vars is not final
-        if (temp == exitText) {
+        if (temp == returnText) {
+            setResult(RESULT_OK);
             finish();
         } else if (temp == helpText) {
             popupText.setText(gameDescription);
             popupWindow.showAtLocation(findViewById(R.id.rl), Gravity.CENTER,0,0);
+        } else if (temp == exitText) {
+            setResult(RESULT_CANCELED);
+            finish();
         }
         return super.onOptionsItemSelected(menuItem);
     }
@@ -188,6 +195,7 @@ public class GameScreen extends AppCompatActivity implements View.OnClickListene
         gamesWon = getResources().getStringArray(R.array.gamesWon)[languageSelected];
         helpText = getResources().getStringArray(R.array.helpActionBar)[languageSelected];
         nextWord = getResources().getStringArray(R.array.nextWord)[languageSelected];
+        returnText = getResources().getStringArray(R.array.returnActionBar)[languageSelected];
         totalWords = getResources().getStringArray(R.array.wordsTotal)[languageSelected];
         wordsPlayed = getResources().getStringArray(R.array.wordsPlayed)[languageSelected];
 

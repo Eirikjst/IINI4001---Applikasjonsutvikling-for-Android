@@ -47,8 +47,8 @@
     </string-array>
 
     <string-array name="gameFinished">
-        <item>Game finished, click exit to start new game</item>
-        <item>Spillet er ferdig, klikk avslutt for å starte nytt spill</item>
+        <item>Game finished, return to main menu to start new game</item>
+        <item>Spillet er ferdig, returner til hovedmeny for å starte nytt spill</item>
     </string-array>
 
     <string-array name="gamesLost">
@@ -95,6 +95,11 @@
     <string-array name="nextWord">
         <item>Next word</item>
         <item>Neste ord</item>
+    </string-array>
+
+    <string-array name="returnActionBar">
+        <item>Return to main menu</item>
+        <item>Returner til hovedmeny</item>
     </string-array>
 
     <string-array name="wordsPlayed">
